@@ -1,0 +1,27 @@
+# =============================================
+# فواتيري — Render Blueprint (زرّ واحد ينشئ كل شيء)
+# ١) أنشئ الخدمة (web)
+# ٢) أنشئ قاعدة PostgreSQL مجانية واربطها تلقائياً
+# ٣) يحقن DATABASE_URL تلقائياً — لا حاجة لأي إعداد يدوي
+# =============================================
+
+databases:
+  - name: fawateeri-db
+    plan: free
+    databaseName: fawateeri
+    user: fawateeri
+
+services:
+  - type: web
+    name: fawateeri
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/store
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: fawateeri-db
+          property: connectionString
